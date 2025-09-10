@@ -1,17 +1,16 @@
-# 📚 Biblioteca Web - Sistema de Gestión Bibliotecaria
+# 📚 Sistema de Biblioteca
 
-Sistema web para la gestión de una biblioteca con recursos virtuales y físicos, desarrollado con **ASP.NET Core 8.0**, **Entity Framework Core** y **SQL Server**.
+Sistema web para gestión de bibliotecas desarrollado con **ASP.NET Core MVC**, **Entity Framework Core** y **SQLite**. Permite administrar libros, préstamos y reservas, con funcionalidades CRUD completas y una interfaz sencilla e intuitiva.
 
 ---
 
 ## 🛠️ Tecnologías
 
-- ASP.NET Core 8.0 MVC
+- ASP.NET Core 6.0 MVC
 - Entity Framework Core
-- SQL Server 2019+ / SQL Server LocalDB
+- SQLite Database
 - Bootstrap 5
-- Font Awesome 6.0
-- JavaScript
+- Font Awesome
 
 ---
 
@@ -19,17 +18,15 @@ Sistema web para la gestión de una biblioteca con recursos virtuales y físicos
 
 ### 📌 Prerequisitos
 
-- Visual Studio 2022 (o superior)
-- .NET 8.0 SDK
-- SQL Server 2019 (o superior) / SQL Server LocalDB
-- SQL Server Management Studio (recomendado)
+- .NET 6.0 SDK o superior
+- Visual Studio 2022 o VS Code
 
 ### 🚀 Pasos de instalación
 
-1. **Clonar/Descargar el proyecto**
+1. **Clonar el repositorio**
 ```bash
-git clone [URL_DEL_REPOSITORIO]
-cd BibliotecaWeb
+git clone <url-del-repositorio>
+cd SistemaBiblioteca
 ```
 
 2. **Restaurar paquetes NuGet**
@@ -37,193 +34,186 @@ cd BibliotecaWeb
 dotnet restore
 ```
 
-3. **Configurar la base de datos**
+3. **Crear la base de datos**
 ```bash
-# Mediante la Consola del Administrador de paquetes de NuGet en Visual Studio:
-Update-Database
+dotnet ef migrations add Initial
+dotnet ef database update
 ```
 
-4. **Cargar datos de prueba**
-```sql
--- Para llenar las tablas con datos de ejemplo, abre SQL Server Management Studio
--- Conéctate a la instancia: (localdb)\mssqllocaldb
--- Ejecuta el script: Scripts/CreateDatabase.sql
+4. **Ejecutar la aplicación**
+```bash
+dotnet run
 ```
 
-5. **Ejecutar la aplicación**
-```bash
-# Presiona F5 para iniciar el proyecto
-# La aplicación estará disponible en:
-# HTTPS: https://localhost:7106
-# HTTP: http://localhost:5216
-```
+### 🌐 URLs de prueba
+
+- Inicio: https://localhost:7028/
+- Libros: https://localhost:7028/Libros
+- Préstamos: https://localhost:7028/Prestamos
+- Reservas: https://localhost:7028/Reservas
 
 ---
 
 ## 📂 Estructura del Proyecto
 
 ```
-BibliotecaWeb/
-├── Controllers/
+SistemaBiblioteca/
+│
+├── Controllers/               # Controladores MVC
 │   ├── HomeController.cs
-│   ├── BibliotecaController.cs
-│   └── UsuarioController.cs
-├── Models/
-│   ├── Usuario.cs
+│   ├── LibrosController.cs      # CRUD completo (Create, Edit, Delete, Details)
+│   ├── PrestamosController.cs   # CRUD completo
+│   └── ReservasController.cs    # CRUD completo
+│
+├── Models/                    # Modelos de datos
 │   ├── Libro.cs
-│   ├── Categoria.cs
 │   ├── Prestamo.cs
-│   ├── LoginViewModel.cs
-│   └── RegistroViewModel.cs
-├── Views/
-│   ├── Shared/
-│   │   └── _Layout.cshtml
-│   ├── Home/
+│   ├── Reserva.cs
+│   └── ErrorViewModel.cs
+│
+├── Data/                      # Contexto de BD y carga de datos
+│   ├── BibliotecaContext.cs
+│   └── SeedData.cs
+│
+├── Views/                     # Vistas Razor
+│   ├── Home/                  # Página principal
 │   │   └── Index.cshtml
-│   ├── Biblioteca/
-│   │   ├── Virtual.cshtml
-│   │   ├── Fisica.cshtml
-│   │   ├── Prestamos.cshtml
-│   │   └── DetalleLibro.cshtml
-│   └── Usuario/
-│       ├── Login.cshtml
-│       └── Registro.cshtml
-├── Data/
-│   └── BibliotecaDbContext.cs
-├── Migrations/
-│   ├── [timestamp]_InitialCreate.cs
-│   ├── [timestamp]_InitialCreate.Designer.cs
-│   └── BibliotecaDbContextModelSnapshot.cs
-├── wwwroot/
-│   ├── css/
-│   │   └── site.css
-│   ├── js/
-│   │   └── site.js
-│   └── images/
-├── Scripts/
-│   └── CreateDatabase.sql
-├── Program.cs
-├── appsettings.json
-└── BibliotecaWeb.csproj
+│   ├── Libros/                # CRUD de libros
+│   │   ├── Create.cshtml
+│   │   ├── Edit.cshtml
+│   │   ├── Delete.cshtml
+│   │   ├── Details.cshtml
+│   │   └── Index.cshtml
+│   ├── Prestamos/             # CRUD de préstamos
+│   │   ├── Create.cshtml
+│   │   ├── Edit.cshtml
+│   │   ├── Delete.cshtml
+│   │   ├── Details.cshtml
+│   │   └── Index.cshtml
+│   ├── Reservas/              # CRUD de reservas
+│   │   ├── Create.cshtml
+│   │   ├── Edit.cshtml
+│   │   ├── Delete.cshtml
+│   │   ├── Details.cshtml
+│   │   └── Index.cshtml
+│   └── Shared/                # Layout y parciales
+│       ├── _Layout.cshtml
+│       ├── _Header.cshtml
+│       ├── _Footer.cshtml
+│       ├── Error.cshtml
+│       └── ...
+│
+├── wwwroot/                   # Archivos estáticos
+│   ├── css/ (site.css)
+│   ├── js/  (site.js)
+│   ├── imagenes/
+│   └── lib/
+│
+├── appsettings.json           # Configuración
+├── biblioteca.db              # Base de datos SQLite
+└── Program.cs                 # Configuración principal
 ```
 
 ---
 
-## ✅ Funcionalidades Principales
+## 📊 Datos de Prueba
 
-### 🏠 **Form1 (Inicio)**
-- Pantalla de bienvenida con navegación principal
+El sistema incluye datos precargados automáticamente mediante SeedData.cs:
 
-### 💻 **Form2 (Virtual)**  
-- Biblioteca virtual con e-libros
-- Bibliotecas públicas y recursos online
+- 15 libros de diferentes géneros
+- 5 préstamos de ejemplo
+- 5 reservas activas
 
-### 📚 **Form3 (Física)**
-- Catálogo de libros físicos por categorías (Literatura, Técnicos, General)
+---
 
-### 📋 **Form4 (Préstamos)**
-- Gestión completa de préstamos con actualización de estados
+## ✅ Funcionalidades
 
-### 👤 **Form5 (Usuarios)**
-- Sistema de login, registro y gestión de usuarios
+- CRUD de libros (crear, editar, eliminar, detalles)
+- Búsqueda de libros por título y autor
+- Gestión de préstamos
+- Gestión de reservas
+- Interfaz responsive con Bootstrap
+- Validaciones en servidor y cliente
 
 ---
 
 ## 📸 Capturas de la Interfaz
 
-### 🔐 **Sistema de Autenticación**
-![Pantalla de Inicio de Sesión](screenshots/login.png)
-
 ### 🏠 **Página Principal**
-![Página de Inicio](screenshots/inicio.png)
+![Página Principal](screenshots/inicio.png)
 
-### 📚 **Biblioteca Física**
-![Catálogo de Libros Físicos](screenshots/fisica.png)
+### 🔍 **Búsqueda de Libros**
+![Búsqueda de Libros](screenshots/barradebusqueda.png)
 
-### 📋 **Gestión de Préstamos**
-![Sistema de Préstamos](screenshots/prestamos.png)
+### 📚 **Colecciones de Libros**
+![Colecciones](screenshots/colecciones.png)
 
-### 💻 **Biblioteca Virtual**
-![Recursos Digitales](screenshots/virtual.png)
+### ➕ **Añadir Nuevo Libro**
+![Añadir Nuevo Libro](screenshots/agregarlibro.png)
 
----
+### 📖 **Información del Libro**
+![Información del Libro](screenshots/detallelibro.png)
 
-## 🎨 Características de Diseño
+### 📑 **Gestión de Préstamos**
+![Gestión de Préstamos](screenshots/prestamos.png)
 
-- **Responsive Design**: Compatible con dispositivos móviles y escritorio
-- **Tema BiblioRed**: Colores y estilos inspirados en bibliotecas públicas
-- **Iconografía**: Font Awesome 6.0 para iconos modernos
-- **Animaciones**: Transiciones suaves y efectos de hover
-- **UX/UI**: Interfaz intuitiva y fácil navegación
+### ✏️ **Registrar Préstamo**
+![Registrar Préstamo](screenshots/registrarprestamo.png)
 
----
+### 🗂️ **Gestión de Reservas**
+![Gestión de Reservas](screenshots/reservas.png)
 
-## 📊 Datos de Prueba Incluidos
-
-- **Categorías**: Literatura, Técnicos, General
-- **Libros Virtuales**: 7 recursos digitales
-- **Libros Físicos**: 9 ejemplares con diferentes disponibilidades
-- **Préstamos**: 4 préstamos de ejemplo con diferentes estados
-- **Usuarios**: 4 usuarios de prueba
-
----
-
-## 🔒 Funcionalidades de Seguridad
-
-- Validación de formularios en cliente y servidor
-- Sesiones para autenticación
-- Protección CSRF integrada
-- Validación de modelos con Data Annotations
+### 📝 **Crear Nueva Reserva**
+![Crear Nueva Reserva](screenshots/crearreserva.png)
 
 ---
 
 ## 🛠️ Solución de Problemas Comunes
 
-### ⚠️ **Error de Conexión a Base de Datos**
-```
-Verifica:
-1. SQL Server está ejecutándose
-2. La cadena de conexión es correcta
-3. El usuario tiene permisos en la base de datos
-```
-
-### ⚠️ **Error "Entity Framework Core is not installed"**
+### ⚠️ Error: no se encuentra la base de datos
+Ejecuta los siguientes comandos para recrearla:
 ```bash
-dotnet add package Microsoft.EntityFrameworkCore.SqlServer
-dotnet add package Microsoft.EntityFrameworkCore.Tools
+dotnet ef database update
 ```
 
-### ⚠️ **Error de Bootstrap/CSS**
-```
-Verifica que los archivos estén en wwwroot/:
-- lib/bootstrap/dist/css/bootstrap.min.css
-- lib/bootstrap/dist/js/bootstrap.bundle.min.js
+### ⚠️ Los estilos no cargan
+Verifica que la carpeta wwwroot/lib tenga las dependencias de Bootstrap y Font Awesome.
+
+### ⚠️ Error en migraciones
+Elimina la carpeta Migrations/ y vuelve a ejecutar:
+```bash
+dotnet ef migrations add Initial
+dotnet ef database update
 ```
 
 ---
 
 ## 🚀 Próximas Mejoras
 
-- [ ] Implementar búsqueda avanzada
-- [ ] Sistema de reservas
-- [ ] Notificaciones por email
-- [ ] API REST para móviles
-- [ ] Reportes y estadísticas
-- [ ] Sistema de multas
-- [ ] Integración con códigos de barras
+- 🔐 Sistema de autenticación de usuarios
+- 👥 Roles (administrador, lector)
+- 📅 Gestión de fechas de devolución con alertas
+- 📊 Reportes de libros más prestados
+- 🌐 Integración con API externa de libros (ej. Google Books)
 
 ---
 
 ## 🤝 Contribuciones
 
-Para contribuir al proyecto:
+¡Las contribuciones son bienvenidas! 🎉
 
-1. Fork el repositorio
-2. Crea una rama para tu feature (`git checkout -b feature/nueva-funcionalidad`)
-3. Commit tus cambios (`git commit -am 'Agregar nueva funcionalidad'`)
-4. Push a la rama (`git push origin feature/nueva-funcionalidad`)
+Para contribuir:
+
+1. Haz un fork del repositorio
+2. Crea una nueva rama (git checkout -b feature/nueva-funcionalidad)
+3. Realiza tus cambios y haz commit (git commit -m 'Agrego nueva funcionalidad')
+4. Haz push a la rama (git push origin feature/nueva-funcionalidad)
 5. Crea un Pull Request
 
 ---
 
-**👨‍💻 Desarrollado por Daniel Mateus usando ASP.NET Core 8.0**
+## 👨‍💻 Desarrollado por
+
+**Daniel Esteban Mateus Velásquez**  
+📧 [daniel.mateus20022@gmail.com]  
+💼 [DanMox-24]
