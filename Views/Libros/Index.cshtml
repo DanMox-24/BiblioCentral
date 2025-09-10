@@ -1,0 +1,199 @@
+﻿@model IEnumerable<SistemaBiblioteca.Models.Libro>
+
+@{
+    ViewData["Title"] = "Colecciones";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="fas fa-books me-2 text-primary"></i>Colecciones de Libros</h2>
+    <a asp-action="Create" class="btn btn-primary">
+        <i class="fas fa-plus me-2"></i>Agregar Libro
+    </a>
+</div>
+
+<!-- Barra de búsqueda -->
+<div class="row mb-4">
+    <div class="col-md-8">
+        <form asp-action="Index" method="get" class="input-group">
+            <input type="text" class="form-control" name="busqueda" value="@ViewData["BusquedaActual"]"
+                   placeholder="Buscar por título o autor..." aria-label="Búsqueda">
+            <button class="btn btn-outline-primary" type="submit">
+                <i class="fas fa-search me-1"></i>Buscar
+            </button>
+            @if (!string.IsNullOrEmpty(ViewData["BusquedaActual"]?.ToString()))
+            {
+                <a href="@Url.Action("Index")" class="btn btn-outline-secondary">
+                    <i class="fas fa-times me-1"></i>Limpiar
+                </a>
+            }
+        </form>
+    </div>
+    <div class="col-md-4 text-end">
+        <span class="text-muted">
+            <i class="fas fa-info-circle me-1"></i>
+            @Model.Count() libro(s) encontrado(s)
+        </span>
+    </div>
+</div>
+
+@if (!string.IsNullOrEmpty(ViewData["BusquedaActual"]?.ToString()))
+{
+    <div class="alert alert-info">
+        <i class="fas fa-search me-2"></i>
+        Resultados para: "<strong>@ViewData["BusquedaActual"]</strong>"
+    </div>
+}
+
+<!-- Grid de tarjetas de libros -->
+<div class="row g-4">
+    @foreach (var libro in Model)
+    {
+        <div class="col-lg-4 col-md-6">
+            <div class="card h-100 libro-card">
+                <div class="position-relative">
+                    @if (!string.IsNullOrEmpty(libro.ImagenUrl))
+                    {
+                        <img src="~/imagenes/@libro.ImagenUrl" class="card-img-top" alt="Portada de @libro.Titulo"
+                             style="height: 300px; object-fit: cover;" onerror="this.src='/imagenes/default-book.jpg'">
+                    }
+                    else
+                    {
+                        <div class="card-img-top d-flex align-items-center justify-content-center bg-light"
+                             style="height: 300px;">
+                            <i class="fas fa-book fa-4x text-muted"></i>
+                        </div>
+                    }
+
+                    <!-- Badge de disponibilidad -->
+                    <div class="position-absolute top-0 end-0 m-2">
+                        @if (libro.Disponible)
+                        {
+                            <span class="badge bg-success">
+                                <i class="fas fa-check me-1"></i>Disponible
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-danger">
+                                <i class="fas fa-times me-1"></i>No Disponible
+                            </span>
+                        }
+                    </div>
+                </div>
+
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title text-primary">@libro.Titulo</h5>
+                    <p class="card-text">
+                        <strong><i class="fas fa-user me-1"></i>Autor:</strong> @libro.Autor
+                    </p>
+
+                    @if (!string.IsNullOrEmpty(libro.Genero))
+                    {
+                        <p class="card-text">
+                            <small class="text-muted">
+                                <i class="fas fa-tag me-1"></i>@libro.Genero
+                            </small>
+                        </p>
+                    }
+
+                    @if (libro.AnioPublicacion.HasValue)
+                    {
+                        <p class="card-text">
+                            <small class="text-muted">
+                                <i class="fas fa-calendar me-1"></i>@libro.AnioPublicacion
+                            </small>
+                        </p>
+                    }
+
+                    @if (!string.IsNullOrEmpty(libro.Descripcion))
+                    {
+                        <p class="card-text flex-grow-1">
+                            @(libro.Descripcion.Length > 100 ? libro.Descripcion.Substring(0, 100) + "..." : libro.Descripcion)
+                        </p>
+                    }
+
+                    <!-- Botones de acción -->
+                    <div class="mt-auto">
+                        <div class="btn-group w-100" role="group">
+                            <a asp-action="Details" asp-route-id="@libro.Id" class="btn btn-outline-primary">
+                                <i class="fas fa-eye me-1"></i>Ver
+                            </a>
+                            <a asp-action="Edit" asp-route-id="@libro.Id" class="btn btn-outline-secondary">
+                                <i class="fas fa-edit me-1"></i>Editar
+                            </a>
+                        </div>
+
+                        <!-- Formularios para reservar y prestar -->
+                        <div class="mt-2">
+                            @if (libro.Disponible)
+                            {
+                                <!-- Formulario de préstamo -->
+                                <form asp-action="CrearPrestamo" method="post" class="d-inline">
+                                    <input type="hidden" name="libroId" value="@libro.Id" />
+                                    <div class="input-group input-group-sm mb-2">
+                                        <input type="text" class="form-control" name="nombreUsuario"
+                                               placeholder="Nombre del usuario" required />
+                                        <button type="submit" class="btn btn-success">
+                                            <i class="fas fa-hand-holding me-1"></i>Prestar
+                                        </button>
+                                    </div>
+                                </form>
+                            }
+
+                            <!-- Formulario de reserva (siempre disponible) -->
+                            <form asp-action="CrearReserva" method="post" class="d-inline">
+                                <input type="hidden" name="libroId" value="@libro.Id" />
+                                <div class="input-group input-group-sm">
+                                    <input type="text" class="form-control" name="nombreUsuario"
+                                           placeholder="Nombre del usuario" required />
+                                    <button type="submit" class="btn btn-warning">
+                                        <i class="fas fa-bookmark me-1"></i>Reservar
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@if (!Model.Any())
+{
+    <div class="text-center py-5">
+        <i class="fas fa-search fa-4x text-muted mb-3"></i>
+        <h4 class="text-muted">No se encontraron libros</h4>
+        <p class="text-muted">
+            @if (!string.IsNullOrEmpty(ViewData["BusquedaActual"]?.ToString()))
+            {
+                <span>No hay libros que coincidan con tu búsqueda.</span>
+                <a href="@Url.Action("Index")" class="btn btn-link">Ver todos los libros</a>
+            }
+            else
+            {
+                <span>Aún no hay libros en la biblioteca.</span>
+                <a asp-action="Create" class="btn btn-primary">Agregar el primer libro</a>
+            }
+        </p>
+    </div>
+}
+
+<style>
+    .libro-card {
+        transition: transform 0.2s;
+    }
+
+        .libro-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+    .card-img-top {
+        transition: opacity 0.2s;
+    }
+
+    .libro-card:hover .card-img-top {
+        opacity: 0.9;
+    }
+</style>

@@ -1,0 +1,97 @@
+﻿@{
+    ViewData["Title"] = "Inicio";
+}
+
+<div class="text-center">
+    <div class="hero-section py-5">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <h1 class="display-4 text-primary mb-4">
+                        <i class="fas fa-book-open me-3"></i>
+                        Bienvenido a la Biblioteca Central
+                    </h1>
+                    <p class="lead mb-4">
+                        Descubre un mundo de conocimiento a tu alcance. Explora nuestra amplia colección de libros,
+                        realiza reservas y gestiona tus préstamos de manera sencilla.
+                    </p>
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+                        <a class="btn btn-primary btn-lg px-4" asp-controller="Libros" asp-action="Index" role="button">
+                            <i class="fas fa-search me-2"></i>Explorar Colecciones
+                        </a>
+                        <a class="btn btn-outline-primary btn-lg px-4" asp-controller="Prestamos" asp-action="Create" role="button">
+                            <i class="fas fa-plus me-2"></i>Nuevo Préstamo
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="text-center">
+                        <i class="fas fa-university" style="font-size: 12rem; color: var(--azul-secundario); opacity: 0.7;"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sección de búsqueda destacada -->
+    <div class="search-section py-4" style="background-color: var(--gris-claro);">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <h3 class="mb-3">¿Qué libro estás buscando?</h3>
+                    <form asp-controller="Libros" asp-action="Index" method="get" class="input-group input-group-lg">
+                        <input type="text" class="form-control" name="busqueda" placeholder="Ingresa el título del libro o nombre del autor..." aria-label="Búsqueda de libros">
+                        <button class="btn btn-primary" type="submit">
+                            <i class="fas fa-search me-2"></i>Buscar Libros
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sección de accesos rápidos -->
+    <div class="quick-actions py-5">
+        <div class="container">
+            <h3 class="mb-4">Accesos Rápidos</h3>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="card h-100 text-center">
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <i class="fas fa-book fa-3x text-primary"></i>
+                            </div>
+                            <h5 class="card-title">Explorar Colecciones</h5>
+                            <p class="card-text">Navega por nuestra extensa biblioteca y descubre nuevos títulos.</p>
+                            <a href="@Url.Action("Index", "Libros")" class="btn btn-primary">Ver Libros</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100 text-center">
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <i class="fas fa-hand-holding fa-3x text-primary"></i>
+                            </div>
+                            <h5 class="card-title">Gestionar Préstamos</h5>
+                            <p class="card-text">Consulta el historial de préstamos y registra nuevas entregas.</p>
+                            <a href="@Url.Action("Index", "Prestamos")" class="btn btn-primary">Ver Préstamos</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100 text-center">
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <i class="fas fa-bookmark fa-3x text-primary"></i>
+                            </div>
+                            <h5 class="card-title">Administrar Reservas</h5>
+                            <p class="card-text">Revisa las reservas activas y crea nuevas reservas para algún título.</p>
+                            <a href="@Url.Action("Index", "Reservas")" class="btn btn-primary">Ver Reservas</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

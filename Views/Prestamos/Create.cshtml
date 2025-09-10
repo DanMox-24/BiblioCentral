@@ -1,0 +1,136 @@
+﻿@model SistemaBiblioteca.Models.Prestamo
+
+@{
+    ViewData["Title"] = "Nuevo Préstamo";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">
+                    <i class="fas fa-plus-circle me-2 text-primary"></i>Registrar Nuevo Préstamo
+                </h4>
+            </div>
+            <div class="card-body">
+                <form asp-action="Create">
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label asp-for="LibroId" class="form-label">
+                                    <i class="fas fa-book me-2"></i>Libro *
+                                </label>
+                                <select asp-for="LibroId" class="form-select" asp-items="ViewBag.LibroId">
+                                    <option value="">-- Seleccione un libro --</option>
+                                </select>
+                                <span asp-validation-for="LibroId" class="text-danger"></span>
+                                <div class="form-text">Solo se muestran libros disponibles</div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label asp-for="NombreUsuario" class="form-label">
+                                    <i class="fas fa-user me-2"></i>Nombre del Usuario *
+                                </label>
+                                <input asp-for="NombreUsuario" class="form-control" placeholder="Ingrese el nombre completo" />
+                                <span asp-validation-for="NombreUsuario" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label asp-for="FechaPrestamo" class="form-label">
+                                    <i class="fas fa-calendar-alt me-2"></i>Fecha de Préstamo *
+                                </label>
+                                <input asp-for="FechaPrestamo" class="form-control" type="date" id="FechaPrestamo" />
+                                <span asp-validation-for="FechaPrestamo" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label asp-for="FechaDevolucion" class="form-label">
+                                    <i class="fas fa-calendar-check me-2"></i>Fecha de Devolución *
+                                </label>
+                                <input asp-for="FechaDevolucion" class="form-control" type="date" id="FechaDevolucion" />
+                                <span asp-validation-for="FechaDevolucion" class="text-danger"></span>
+                                <div class="form-text">Por defecto: 30 días a partir del préstamo</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label asp-for="Estado" class="form-label">
+                                    <i class="fas fa-info-circle me-2"></i>Estado
+                                </label>
+                                <select asp-for="Estado" class="form-select">
+                                    <option value="Activo" selected>Activo</option>
+                                    <option value="Devuelto">Devuelto</option>
+                                    <option value="Vencido">Vencido</option>
+                                </select>
+                                <span asp-validation-for="Estado" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Observaciones" class="form-label">
+                            <i class="fas fa-sticky-note me-2"></i>Observaciones
+                        </label>
+                        <textarea asp-for="Observaciones" class="form-control" rows="3"
+                                  placeholder="Observaciones adicionales (opcional)"></textarea>
+                        <span asp-validation-for="Observaciones" class="text-danger"></span>
+                    </div>
+
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a asp-action="Index" class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left me-2"></i>Cancelar
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-2"></i>Registrar Préstamo
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Información adicional -->
+        <div class="card mt-4">
+            <div class="card-body">
+                <h6 class="card-title">
+                    <i class="fas fa-lightbulb me-2 text-warning"></i>Información Importante
+                </h6>
+                <ul class="mb-0">
+                    <li>Al registrar un préstamo, el libro se marcará automáticamente como "No Disponible"</li>
+                    <li>La fecha de devolución por defecto es 30 días después del préstamo</li>
+                    <li>Los préstamos vencidos se marcarán automáticamente cuando pase la fecha de devolución</li>
+                    <li>Solo se pueden prestar libros que estén marcados como disponibles</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        // Configurar fecha de devolución automáticamente cuando cambie la fecha de préstamo
+        document.getElementById('FechaPrestamo').addEventListener('change', function () {
+            const fechaPrestamo = new Date(this.value);
+            if (fechaPrestamo) {
+                const fechaDevolucion = new Date(fechaPrestamo);
+                fechaDevolucion.setDate(fechaDevolucion.getDate() + 30);
+                document.getElementById('FechaDevolucion').value = fechaDevolucion.toISOString().split('T')[0];
+            }
+        });
+    </script>
+}

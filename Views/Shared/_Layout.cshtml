@@ -1,0 +1,97 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Sistema de Biblioteca</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <style>
+        :root {
+            --azul-primario: #2c5aa0;
+            --azul-secundario: #4a90d9;
+            --crema: #f8f6f0;
+            --blanco: #ffffff;
+            --gris-claro: #f1f3f4;
+        }
+
+        body {
+            background-color: var(--crema);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .navbar-custom {
+            background-color: var(--azul-primario) !important;
+        }
+
+        .navbar-custom .navbar-brand,
+        .navbar-custom .navbar-nav .nav-link {
+            color: var(--blanco) !important;
+        }
+
+        .navbar-custom .navbar-nav .nav-link:hover {
+            color: var(--crema) !important;
+        }
+
+        .btn-primary {
+            background-color: var(--azul-primario);
+            border-color: var(--azul-primario);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--azul-secundario);
+            border-color: var(--azul-secundario);
+        }
+
+        .card {
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border: none;
+        }
+
+        footer {
+            background-color: var(--azul-primario);
+            color: var(--blanco);
+        }
+
+        .text-primary {
+            color: var(--azul-primario) !important;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <partial name="_Header" />
+    </header>
+
+    <div class="container-fluid">
+        <main role="main" class="pb-3">
+            <!-- Mensajes de alerta -->
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
+                    <i class="fas fa-check-circle me-2"></i>@TempData["SuccessMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+                </div>
+            }
+
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
+                    <i class="fas fa-exclamation-circle me-2"></i>@TempData["ErrorMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+                </div>
+            }
+
+            @RenderBody()
+        </main>
+    </div>
+
+    <partial name="_Footer" />
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

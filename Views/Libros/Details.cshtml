@@ -1,0 +1,167 @@
+﻿@model SistemaBiblioteca.Models.Libro
+
+@{
+    ViewData["Title"] = "Detalles - " + Model.Titulo;
+}
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="card">
+            @if (!string.IsNullOrEmpty(Model.ImagenUrl))
+            {
+                <img src="~/imagenes/@Model.ImagenUrl" class="card-img-top" alt="Portada de @Model.Titulo"
+                     style="height: 400px; object-fit: cover;" onerror="this.src='/imagenes/default-book.jpg'">
+            }
+            else
+            {
+                <div class="card-img-top d-flex align-items-center justify-content-center bg-light"
+                     style="height: 400px;">
+                    <i class="fas fa-book fa-5x text-muted"></i>
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        <div class="d-flex justify-content-between align-items-start mb-3">
+            <h2 class="text-primary">@Model.Titulo</h2>
+            <div>
+                @if (Model.Disponible)
+                {
+                    <span class="badge bg-success fs-6">
+                        <i class="fas fa-check me-1"></i>Disponible
+                    </span>
+                }
+                else
+                {
+                    <span class="badge bg-danger fs-6">
+                        <i class="fas fa-times me-1"></i>No Disponible
+                    </span>
+                }
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <dl class="row">
+                    <dt class="col-sm-3">
+                        <i class="fas fa-user me-2 text-primary"></i>Autor
+                    </dt>
+                    <dd class="col-sm-9">@Model.Autor</dd>
+
+                    @if (!string.IsNullOrEmpty(Model.ISBN))
+                    {
+                        <dt class="col-sm-3">
+                            <i class="fas fa-barcode me-2 text-primary"></i>ISBN
+                        </dt>
+                        <dd class="col-sm-9">@Model.ISBN</dd>
+                    }
+
+                    @if (!string.IsNullOrEmpty(Model.Genero))
+                    {
+                        <dt class="col-sm-3">
+                            <i class="fas fa-tag me-2 text-primary"></i>Género
+                        </dt>
+                        <dd class="col-sm-9">@Model.Genero</dd>
+                    }
+
+                    @if (Model.AnioPublicacion.HasValue)
+                    {
+                        <dt class="col-sm-3">
+                            <i class="fas fa-calendar me-2 text-primary"></i>Año de Publicación
+                        </dt>
+                        <dd class="col-sm-9">@Model.AnioPublicacion</dd>
+                    }
+
+                    <dt class="col-sm-3">
+                        <i class="fas fa-info-circle me-2 text-primary"></i>Estado
+                    </dt>
+                    <dd class="col-sm-9">
+                        @if (Model.Disponible)
+                        {
+                            <span class="text-success">Disponible para préstamo</span>
+                        }
+                        else
+                        {
+                            <span class="text-danger">No disponible (prestado)</span>
+                        }
+                    </dd>
+
+                    <dt class="col-sm-3">
+                        <i class="fas fa-clock me-2 text-primary"></i>Fecha de Registro
+                    </dt>
+                    <dd class="col-sm-9">@Model.FechaCreacion.ToString("dd/MM/yyyy")</dd>
+                </dl>
+
+                @if (!string.IsNullOrEmpty(Model.Descripcion))
+                {
+                    <hr>
+                    <h5><i class="fas fa-align-left me-2 text-primary"></i>Descripción</h5>
+                    <p>@Model.Descripcion</p>
+                }
+            </div>
+        </div>
+
+        <!-- Acciones rápidas -->
+        <div class="mt-4">
+            <h5>Acciones Rápidas</h5>
+            <div class="row g-3">
+                @if (Model.Disponible)
+                {
+                    <div class="col-md-6">
+                        <div class="card border-success">
+                            <div class="card-body">
+                                <h6 class="card-title">
+                                    <i class="fas fa-hand-holding me-2 text-success"></i>Crear Préstamo
+                                </h6>
+                                <form asp-controller="Libros" asp-action="CrearPrestamo" method="post">
+                                    <input type="hidden" name="libroId" value="@Model.Id" />
+                                    <div class="mb-2">
+                                        <input type="text" class="form-control" name="nombreUsuario"
+                                               placeholder="Nombre del usuario" required />
+                                    </div>
+                                    <button type="submit" class="btn btn-success w-100">
+                                        <i class="fas fa-plus me-2"></i>Crear Préstamo
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+                <div class="col-md-6">
+                    <div class="card border-warning">
+                        <div class="card-body">
+                            <h6 class="card-title">
+                                <i class="fas fa-bookmark me-2 text-warning"></i>Crear Reserva
+                            </h6>
+                            <form asp-controller="Libros" asp-action="CrearReserva" method="post">
+                                <input type="hidden" name="libroId" value="@Model.Id" />
+                                <div class="mb-2">
+                                    <input type="text" class="form-control" name="nombreUsuario"
+                                           placeholder="Nombre del usuario" required />
+                                </div>
+                                <button type="submit" class="btn btn-warning w-100">
+                                    <i class="fas fa-plus me-2"></i>Crear Reserva
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Botones de navegación -->
+        <div class="mt-4">
+            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">
+                <i class="fas fa-edit me-2"></i>Editar
+            </a>
+            <a asp-action="Index" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left me-2"></i>Volver a la Lista
+            </a>
+            <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-outline-danger">
+                <i class="fas fa-trash me-2"></i>Eliminar
+            </a>
+        </div>
+    </div>
+</div>

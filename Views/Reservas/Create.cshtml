@@ -1,0 +1,137 @@
+﻿@model SistemaBiblioteca.Models.Reserva
+
+@{
+    ViewData["Title"] = "Nueva Reserva";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">
+                    <i class="fas fa-bookmark me-2 text-primary"></i>Crear Nueva Reserva
+                </h4>
+            </div>
+            <div class="card-body">
+                <form asp-action="Create">
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label asp-for="LibroId" class="form-label">
+                                    <i class="fas fa-book me-2"></i>Libro *
+                                </label>
+                                <select asp-for="LibroId" class="form-select" asp-items="ViewBag.LibroId">
+                                    <option value="">-- Seleccione un libro --</option>
+                                </select>
+                                <span asp-validation-for="LibroId" class="text-danger"></span>
+                                <div class="form-text">Se pueden reservar libros disponibles y no disponibles</div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label asp-for="NombreUsuario" class="form-label">
+                                    <i class="fas fa-user me-2"></i>Nombre del Usuario *
+                                </label>
+                                <input asp-for="NombreUsuario" class="form-control" placeholder="Ingrese el nombre completo" />
+                                <span asp-validation-for="NombreUsuario" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label asp-for="FechaReserva" class="form-label">
+                                    <i class="fas fa-calendar-alt me-2"></i>Fecha de Reserva *
+                                </label>
+                                <input asp-for="FechaReserva" class="form-control" type="date" />
+                                <span asp-validation-for="FechaReserva" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label asp-for="FechaExpiracion" class="form-label">
+                                    <i class="fas fa-calendar-times me-2"></i>Fecha de Expiración *
+                                </label>
+                                <input asp-for="FechaExpiracion" class="form-control" type="date" />
+                                <span asp-validation-for="FechaExpiracion" class="text-danger"></span>
+                                <div class="form-text">Por defecto: 7 días a partir de la reserva</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label asp-for="Estado" class="form-label">
+                                    <i class="fas fa-info-circle me-2"></i>Estado
+                                </label>
+                                <select asp-for="Estado" class="form-select">
+                                    <option value="Activa" selected>Activa</option>
+                                    <option value="Cancelada">Cancelada</option>
+                                    <option value="Expirada">Expirada</option>
+                                    <option value="Convertida">Convertida</option>
+                                </select>
+                                <span asp-validation-for="Estado" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Observaciones" class="form-label">
+                            <i class="fas fa-sticky-note me-2"></i>Observaciones
+                        </label>
+                        <textarea asp-for="Observaciones" class="form-control" rows="3"
+                                  placeholder="Observaciones adicionales (opcional)"></textarea>
+                        <span asp-validation-for="Observaciones" class="text-danger"></span>
+                    </div>
+
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a asp-action="Index" class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left me-2"></i>Cancelar
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-2"></i>Crear Reserva
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Información adicional -->
+        <div class="card mt-4">
+            <div class="card-body">
+                <h6 class="card-title">
+                    <i class="fas fa-lightbulb me-2 text-warning"></i>Información sobre Reservas
+                </h6>
+                <ul class="mb-0">
+                    <li>Las reservas son útiles para libros que no están disponibles actualmente</li>
+                    <li>Una reserva activa tiene una duración de 7 días por defecto</li>
+                    <li>Las reservas pueden convertirse en préstamos cuando el libro esté disponible</li>
+                    <li>Un usuario puede tener múltiples reservas, pero no del mismo libro</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        // Configurar fecha de expiración automáticamente cuando cambie la fecha de reserva
+        document.getElementById('FechaReserva').addEventListener('change', function() {
+            const fechaReserva = new Date(this.value);
+            if (fechaReserva) {
+                const fechaExpiracion = new Date(fechaReserva);
+                fechaExpiracion.setDate(fechaExpiracion.getDate() + 7);
+                document.getElementById('FechaExpiracion').value = fechaExpiracion.toISOString().split('T')[0];
+            }
+        });
+    </script>
+}
