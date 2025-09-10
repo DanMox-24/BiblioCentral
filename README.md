@@ -1,4 +1,4 @@
-# 📚 Sistema de Biblioteca
+# 📚 Biblioteca Central
 
 Sistema web para gestión de bibliotecas desarrollado con **ASP.NET Core MVC**, **Entity Framework Core** y **SQLite**. Permite administrar libros, préstamos y reservas, con funcionalidades CRUD completas y una interfaz sencilla e intuitiva.
 
